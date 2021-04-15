@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_pos_session_form_inherit" model="ir.ui.view">
+            <field name="name">pos.session.form</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                        <button name="action_print_control" string="Imprimer Control" type="object"/>
+                    </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

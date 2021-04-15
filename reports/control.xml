@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="paperformat_euro" model="report.paperformat">
+            <field name="name">European A4</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+        <report
+                id="report_pos_session"
+                model="pos.session"
+                string="Control"
+                name="pos_extend.report_pos_session_view"
+                file="pos_extend.report_pos_session_view"
+                report_type="qweb-pdf"
+                paperformat="paperformat_euro"
+                print_report_name="'control%s' % (object.name)"
+        />
+<template id="report_pos_session_view">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="height: 28px; width: 50%;text-align: left; ">
+                                    <h1 style="font-weight:bold;font-size:15px;">
+<!--                                        <t t-esc="doc.exporter_id.name"/>-->
+                                    </h1>
+                                </td>
+
+                                <td style="height: 28px; width: 50%; text-align: right;">
+                                    <p style="margin:auto;">
+                                        <span style="font-weight:bold;">
+                                            <t t-esc="doc.config_id.company_id.name"/>
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                        <h1 style="font-weight:bold;font-size:16px;text-align:center;">N° : <t
+                                t-esc="doc.name"/></h1>
+
+                        <table style="width: 100%;border: 1px solid black !important;margin-top:20px;">
+                            <tr>
+
+                                <td style="height: 28px;text-align: left; ">
+                                    <h1 style="font-weight:bold;font-size:15px;margin-left:15px;">Nom caissier</h1>
+                                </td>
+                                <td style="height: 28px;text-align: left; ">:</td>
+                                <td style="height: 28px;text-align: left; ">
+                                    <h1 style="font-size:15px;">
+                                        <t t-esc="doc.user_id.name"/>
+                                    </h1>
+                                </td>
+                                <td style="height: 28px;text-align: left; "></td>
+                                <td style="height: 28px;text-align: left; "></td>
+                                <td style="height: 28px;text-align: left; "></td>
+
+                            </tr>
+
+                            <tr>
+
+                                    <td style="height: 28px;text-align: left; ">
+                                        <h1 style="font-weight:bold;font-size:15px;margin-left:15px;">Date du</h1>
+                                    </td>
+                                    <td style="height: 28px;text-align: left; ">:</td>
+                                    <td style="height: 28px;text-align: left; ">
+                                        <h1 style="font-size:15px;">
+                                            <t t-esc="doc.start_at"/>
+                                        </h1>
+                                    </td>
+
+
+                                <td style="height: 28px;text-align: left; ">
+                                    <h1 style="font-weight:bold;font-size:15px;margin-left:15px;">Date au</h1>
+                                </td>
+                                <td style="height: 28px;text-align: left; ">:</td>
+                                <td style="height: 28px;text-align: left; ">
+                                    <h1 style="font-size:15px;">
+                                        <t t-esc="doc.stop_at"/>
+                                    </h1>
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+                        <table style="width: 100%;border: 1px solid black !important;margin-top:20px;height:120px;">
+                            <tr style="border: 1px solid black !important;text-align:center;height:10px;">
+                                <td style="border: 1px solid black !important;text-align:center;height:10px;">
+                                    <h1 style="font-weight:bold;font-size:15px;">Famile</h1>
+                                </td>
+                                <td style="border: 1px solid black !important;text-align:center;height:10px;">
+                                    <h1 style="font-weight:bold;font-size:15px;">CA</h1>
+                                </td>
+                                <td style="border: 1px solid black !important;text-align:center;">
+                                    <span style="font-weight:bold;font-size:15px;text-align:center;">METHODE DE PAIEMENT</span>
+                                </td>
+                            </tr>
+
+                            <t t-set="total" t-value="0"/>
+
+                            <t t-set="my_dict" t-value="doc.get_control_pos()"/>
+                            <t t-foreach="my_dict" t-as="line">
+                                <tr>
+                                    <td style="border-right: 1px solid black !important;text-align:center;height:10px;">
+                                        <p style=";font-size:15px;">
+                                            <t t-esc="line['famille']"/>
+                                        </p>
+                                    </td>
+                                    <td style="border-right: 1px solid black !important;text-align:center;height:10px;">
+                                        <p style=";font-size:15px;">
+                                            <t t-esc="line['total']"/>
+                                        </p>
+                                    </td>
+                                    <td style="border-right: 1px solid black !important;text-align:center;height:10px;">
+                                        <p style="font-size:15px;">
+                                            <t t-esc="line['methode']"/>
+                                        </p>
+                                    </td>
+                                </tr>
+
+                                <t t-set="total" t-value="total + line['total']"/>
+                            </t>
+
+                            <tr style="border-top: 3px solid black;border-bottom: 3px solid black;text-align:center;height:10px;">
+                                <td style="border-right: 1px solid black !important;">
+                                    <h1 style="font-weight:bold;font-size:15px;">TOTAL</h1>
+                                </td>
+
+                                <td style="border-right: 1px solid black !important;">
+                                    <span style="font-weight:bold;font-size:15px;text-align:center;"><t
+                                            t-esc="total"/></span>
+                                </td>
+                                <td >
+                                </td>
+                            </tr>
+                        </table>
+
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
