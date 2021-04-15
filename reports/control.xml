@@ -117,7 +117,7 @@
                             <t t-set="my_dict" t-value="doc.get_control_pos()"/>
                             <t t-foreach="my_dict" t-as="line">
                                 <tr>
-                                    <td style="border-right: 1px solid black !important;text-align:center;height:10px;">
+                                    <td style="border-right: 1px solid black !important;text-align:left;height:10px;">
                                         <p style=";font-size:15px;">
                                             <t t-esc="line['famille']"/>
                                         </p>
